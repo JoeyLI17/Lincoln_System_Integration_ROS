@@ -24,7 +24,7 @@ Please use **one** of the two installation options, either native **or** docker 
 
 Build the docker container
 ```bash
-docker build . -t capstone
+sudo docker build . -t capstone
 ```
 
 Run the docker file
@@ -45,7 +45,7 @@ git clone https://github.com/udacity/CarND-Capstone.git
 2. Install python dependencies
 ```bash
 cd CarND-Capstone
-pip install -r requirements.txt
+sudo pip install -r requirements.txt
 ```
 3. Make and run styx
 ```bash
