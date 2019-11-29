@@ -29,7 +29,7 @@ class WaypointUpdater(object):
         rospy.init_node('waypoint_updater') # initial the topic
 
         rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
-        rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
+        rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb) # way points call back
 
         # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
 
@@ -42,8 +42,10 @@ class WaypointUpdater(object):
         self.base_waypoints = None
         self.waypoints_2d = None
         self.waypoint_tree = None
+
+        self.loop()
         
-    def loop(self)
+    def loop(self):
         rate = rospy.Rate(50)
         while not rospy.is_shutdown():
             if self.pose and self.base_waypoints:
@@ -52,6 +54,22 @@ class WaypointUpdater(object):
                 self.publish_waypoints(closest_waypoint_idx)
             rate.sleep()
         
+    def get_closest_waypoint_id(self): # get_closest_waypoint_idx
+        x = self.pose.pose.position.x
+        y = self.pose.pose.position.y
+        closest_idx = self.waypoint_tree.query([x,y],1)[1]
+
+        # check if closest is ahead or behind vehicle
+        closest_coord = self.waypoints_2d[closest_idx]
+        prev_coord = self.waypoints_2d[closest_idx-1]
+
+        # equation for hyperplane through closest_coords
+        cl_vect = np.array(closest_coord) # closest point
+        prev_vect = np.array(prev_coord)  # previous point
+        pos_vect = np.array([x,y])
+
+        val = np.dot(cl_vect-prev_vect,pos_vect-cl_vect) # velocity
+
         
         rospy.spin()
 
