@@ -1,0 +1,8 @@
+prefix=/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/devel
+
+Name: waypoint_follower
+Description: Description of waypoint_follower
+Version: 0.0.0
+Cflags: -I/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/src/waypoint_follower/include
+Libs: -L/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/devel/lib -llibwaypoint_follower
+Requires: roscpp std_msgs tf geometry_msgs styx_msgs

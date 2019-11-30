@@ -1,0 +1,2 @@
+set(styx_msgs_MESSAGE_FILES "/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/src/styx_msgs/msg/TrafficLight.msg;/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/src/styx_msgs/msg/TrafficLightArray.msg;/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/src/styx_msgs/msg/Waypoint.msg;/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/src/styx_msgs/msg/Lane.msg")
+set(styx_msgs_SERVICE_FILES "")

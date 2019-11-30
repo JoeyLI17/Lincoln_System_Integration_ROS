@@ -1,0 +1,8 @@
+prefix=/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/install
+
+Name: styx
+Description: Description of styx
+Version: 0.0.0
+Cflags: 
+Libs: -L/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/install/lib 
+Requires: 

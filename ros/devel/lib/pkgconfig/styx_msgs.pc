@@ -1,0 +1,8 @@
+prefix=/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/devel
+
+Name: styx_msgs
+Description: Description of styx_msgs
+Version: 0.0.0
+Cflags: -I/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/devel/include
+Libs: -L/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/devel/lib 
+Requires: 
