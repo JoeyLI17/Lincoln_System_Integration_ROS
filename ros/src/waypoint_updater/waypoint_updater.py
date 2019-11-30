@@ -3,6 +3,7 @@
 import rospy
 from geometry_msgs.msg import PoseStamped
 from styx_msgs.msg import Lane, Waypoint
+from scipy.spatial import KDTree # look up the closest point in space
 
 import math
 
@@ -46,7 +47,7 @@ class WaypointUpdater(object):
         self.loop()
         
     def loop(self):
-        rate = rospy.Rate(50)
+        rate = rospy.Rate(50) # publishing at 50 Hz lowest can be 30 Hz
         while not rospy.is_shutdown():
             if self.pose and self.base_waypoints:
                 # get closest waypoint
@@ -55,9 +56,9 @@ class WaypointUpdater(object):
             rate.sleep()
         
     def get_closest_waypoint_idx(self): # get_closest_waypoint_idx
-        x = self.pose.pose.position.x
-        y = self.pose.pose.position.y
-        closest_idx = self.waypoint_tree.query([x,y],1)[1]
+        x = self.pose.pose.position.x # current position x
+        y = self.pose.pose.position.y # current position y
+        closest_idx = self.waypoint_tree.query([x,y],1)[1] # a KDTree object and query the index of the x,y location
 
         # check if closest is ahead or behind vehicle
         closest_coord = self.waypoints_2d[closest_idx]
@@ -70,7 +71,7 @@ class WaypointUpdater(object):
 
         val = np.dot(cl_vect-prev_vect,pos_vect-cl_vect) # velocity
 
-        if val>0:
+        if val>0: # in this case the way point is behind us
             closest_idx = (closest_idx+1)%len(self.waypoints_2d)
         return closest_idx
 
@@ -86,9 +87,14 @@ class WaypointUpdater(object):
         # TODO: Implement
         self.pose = msg
 
-    def waypoints_cb(self, waypoints):
+    def waypoints_cb(self, waypoints): # latch subscriber
         # TODO: Implement
-        pass
+        self.base_waypoints = waypoints # only once
+        if not self.waypoints_2d: # initiallized before the subscribers
+            self.waypoints_2d = [[waypoint.pose.pose.position.x,waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints] # convert to 2d points
+            self.waypoint_tree = KDTree(self.waypoints_2d)
+        else:
+            rospy.logerr('waypoint_2d is None!\n')
 
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
