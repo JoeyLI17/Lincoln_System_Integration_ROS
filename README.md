@@ -65,7 +65,9 @@ unzip traffic_light_bag_file.zip
 ```
 3. Play the bag file
 ```bash
+roscore
 rosbag play -l traffic_light_bag_file/traffic_light_training.bag
+rviz (In rviz window load rviz config file)
 ```
 4. Launch your project in site mode
 ```bash
