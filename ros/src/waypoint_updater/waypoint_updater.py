@@ -59,6 +59,7 @@ class WaypointUpdater(object):
         x = self.pose.pose.position.x # current position x
         y = self.pose.pose.position.y # current position y
         closest_idx = self.waypoint_tree.query([x,y],1)[1] # a KDTree object and query the index of the x,y location
+        # first 1 means return 1 item the second 1 means get the index of the cordinates 
 
         # check if closest is ahead or behind vehicle
         closest_coord = self.waypoints_2d[closest_idx]
@@ -79,6 +80,7 @@ class WaypointUpdater(object):
         lane = Lane()
         lane.header = self.base_waypoints.header
         lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx+LOOKAHEAD_WPS]
+        rospy.logdebug("Publish lane: ", lane)
         self.final_waypoints_pub.publish(lane)
         
         # rospy.spin()
@@ -87,14 +89,14 @@ class WaypointUpdater(object):
         # TODO: Implement
         self.pose = msg
 
-    def waypoints_cb(self, waypoints): # latch subscriber
+    def waypoints_cb(self, waypoints): # latch subscriber read all waypoints
         # TODO: Implement
         self.base_waypoints = waypoints # only once
         if not self.waypoints_2d: # initiallized before the subscribers
             self.waypoints_2d = [[waypoint.pose.pose.position.x,waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints] # convert to 2d points
             self.waypoint_tree = KDTree(self.waypoints_2d)
         else:
-            rospy.logerr('waypoint_2d is None!\n')
+            rospy.logdebug('waypoint_2d is None!\n')
 
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
