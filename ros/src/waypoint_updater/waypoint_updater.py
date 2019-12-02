@@ -89,12 +89,13 @@ class WaypointUpdater(object):
         # TODO: Implement
         self.pose = msg
 
-    def waypoints_cb(self, waypoints): # latch subscriber read all waypoints
+    def waypoints_cb(self, waypoints): # latch subscriber read all waypoints # walk through video 3:30
         # TODO: Implement
         self.base_waypoints = waypoints # only once
         if not self.waypoints_2d: # initiallized before the subscribers
             self.waypoints_2d = [[waypoint.pose.pose.position.x,waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints] # convert to 2d points
             self.waypoint_tree = KDTree(self.waypoints_2d)
+            rospy.logwarn('waypoint_2d initialization is done!\n')
         else:
             rospy.logdebug('waypoint_2d is None!\n')
 
