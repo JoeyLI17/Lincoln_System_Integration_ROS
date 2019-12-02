@@ -44,7 +44,7 @@ class WaypointUpdater(object):
         self.waypoints_2d = None
         self.waypoint_tree = None
 
-        self.loop()
+        self.loop() # give us the control of publishing frequency 50 Hz 
         
     def loop(self):
         rate = rospy.Rate(50) # publishing at 50 Hz lowest can be 30 Hz
