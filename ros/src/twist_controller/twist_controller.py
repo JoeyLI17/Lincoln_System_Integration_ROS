@@ -54,7 +54,7 @@ class Controller(object):
 
         if linear_vel == 0. and current_vel < 0.1:
             throttle = 0
-            brake = 700 # N*m to hold car in place if we are stopped at light. Acc - 1m/s^2
+            brake = 800 # N*m to hold car in place if we are stopped at light. Acc - 1m/s^2
 
         elif throttle < .1 and vel_error < 0:
             throttle = 0
