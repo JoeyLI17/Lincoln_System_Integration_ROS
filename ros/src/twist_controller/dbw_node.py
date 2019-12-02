@@ -59,6 +59,17 @@ class DBWNode(object):
         self.brake_pub = rospy.Publisher('/vehicle/brake_cmd',
                                          BrakeCmd, queue_size=1)
 
+        # initialized all parameters
+        self.throttle        = 0
+        self.brake           = 0
+        self.steering        = 0
+
+        self.current_vel     = None
+        self.curr_ang_vel    = None
+        self.dbw_enabled     = None
+        self.linear_vel      = None
+        self.angular_vel     = None
+
         # TODO: Create `Controller` object
         # self.controller = Controller(<Arguments you wish to provide>)
 
@@ -79,31 +90,24 @@ class DBWNode(object):
         rospy.loginfo(self.twist_cb)
         rospy.Subscriber('/current_velocity', TwistStamped, self.velocity_cb)
 
-        # initialized all parameters
-        self.throttle        = 0
-        self.brake           = 0
-        self.steering        = 0
-        
-        self.current_vel     = None
-        self.curr_ang_vel    = None
-        self.dbw_enabled     = None
-        self.linear_vel      = None
-        self.angular_vel     = None
-
         self.loop()
 
     def loop(self):
-        rate = rospy.Rate(50) # 50Hz
+        rate = rospy.Rate(50) # 50 Hz
+
         while not rospy.is_shutdown():
-            # TODO: Get predicted throttle, brake, and steering using `twist_controller`
-            # You should only publish the control commands if dbw is enabled
-            # throttle, brake, steering = self.controller.control(<proposed linear velocity>,
-            #                                                     <proposed angular velocity>,
-            #                                                     <current linear velocity>,
-            #                                                     <dbw status>,
-            #                                                     <any other argument you need>)
-            # if <dbw is enabled>:
-            #   self.publish(throttle, brake, steer)
+            # if the vehicle has following data
+            if not None in (self.current_vel, self.linear_vel, self.angular_vel):
+                self.throttle, self.brake, self.steering = self.controller.control(self.current_vel,
+                                                                                   self.dbw_enabled,
+                                                                                   self.linear_vel,
+                                                                                   self.angular_vel)
+                if self.dbw_enabled:
+                    #if self.angular_vel == 0.:
+                        #rospy.logerr("error: self.angular_vel== no input for steering")
+                        #return
+                    
+                    self.publish(self.throttle, self.brake, self.steering)
             rate.sleep()
 
     def publish(self, throttle, brake, steer):
