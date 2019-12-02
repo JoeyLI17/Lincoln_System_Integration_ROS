@@ -61,6 +61,9 @@ class WaypointUpdater(object):
         closest_idx = self.waypoint_tree.query([x,y],1)[1] # a KDTree object and query the index of the x,y location
         # first 1 means return 1 item the second 1 means get the index of the cordinates 
 
+        if self.waypoint_tree == None:
+            rospy.logerr("error: get_closest_waypoint_idx - waypoint_tree (kdtree) not assigned")
+
         # check if closest is ahead or behind vehicle
         closest_coord = self.waypoints_2d[closest_idx]
         prev_coord = self.waypoints_2d[closest_idx-1]
