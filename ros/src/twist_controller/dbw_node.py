@@ -46,17 +46,49 @@ class DBWNode(object):
         max_lat_accel = rospy.get_param('~max_lat_accel', 3.)
         max_steer_angle = rospy.get_param('~max_steer_angle', 8.)
 
+
+        min_speed = 0.0
+        self.brake_max_torque       = abs(decel_limit*vehicle_mass*wheel_radius)
+        self.brake_deadband_perc    = abs(brake_deadband/decel_limit)
+        self.brake_deadband         = brake_deadband
+
         self.steer_pub = rospy.Publisher('/vehicle/steering_cmd',
                                          SteeringCmd, queue_size=1)
         self.throttle_pub = rospy.Publisher('/vehicle/throttle_cmd',
                                             ThrottleCmd, queue_size=1)
         self.brake_pub = rospy.Publisher('/vehicle/brake_cmd',
                                          BrakeCmd, queue_size=1)
+        self.reset_all()
 
         # TODO: Create `Controller` object
         # self.controller = Controller(<Arguments you wish to provide>)
 
-        # TODO: Subscribe to all the topics you need to
+
+        self.controller = Controller (vehicle_mass   = vehicle_mass,
+                                      fuel_capacity  = fuel_capacity,
+                                      brake_deadband = brake_deadband,
+                                      decel_limit    = decel_limit,
+                                      accel_limit    = accel_limit,
+                                      wheel_radius   = wheel_radius,
+                                      wheel_base     = wheel_base,
+                                      steer_ratio    = steer_ratio,
+                                      max_lat_accel  = max_lat_accel,
+                                      max_steer_angle= max_steer_angle)
+
+        # TODO: Subscribe to all the topics you need to                                      
+        rospy.Subscriber('/vehicle/dbw_enabled', Bool, self.dbw_enabled_cb)
+        rospy.Subscriber('/twist_cmd', TwistStamped, self.twist_cb)
+        rospy.loginfo(self.twist_cb)
+        rospy.Subscriber('/current_velocity', TwistStamped, self.velocity_cb)
+
+        self.throttle        = None
+        self.brake           = None
+        self.steering        = None
+        self.linear_vel      = None
+        self.angular_vel     = None
+        self.current_vel     = None
+        self.curr_ang_vel = None
+        self.dbw_enabled     = None
 
         self.loop()
 
