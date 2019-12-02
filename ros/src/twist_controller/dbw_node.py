@@ -103,12 +103,22 @@ class DBWNode(object):
                                                                                    self.linear_vel,
                                                                                    self.angular_vel)
                 if self.dbw_enabled:
-                    #if self.angular_vel == 0.:
-                        #rospy.logerr("error: self.angular_vel== no input for steering")
-                        #return
-                    
                     self.publish(self.throttle, self.brake, self.steering)
             rate.sleep()
+
+    # call backs
+    def velocity_cb(self,msg):
+        self.current_vel = msg.twist.linear.x
+
+    def dbw_enabled_cb(self,msg):
+        self.dbw_enabled = msg
+        
+    def twist_cb(self,msg):
+        self.linear_vel = msg.twist.linear.x
+        self.angular_vel =  msg.twist.angular.z
+#         rospy.logerr(self.linear_vel)
+#         rospy.logerr(self.angular_vel)
+
 
     def publish(self, throttle, brake, steer):
         tcmd = ThrottleCmd()
