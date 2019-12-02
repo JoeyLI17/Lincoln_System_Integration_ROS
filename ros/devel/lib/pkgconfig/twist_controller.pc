@@ -1,8 +1,0 @@
-prefix=/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/devel
-
-Name: twist_controller
-Description: Description of twist_controller
-Version: 0.0.0
-Cflags: 
-Libs: -L/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/devel/lib 
-Requires: 

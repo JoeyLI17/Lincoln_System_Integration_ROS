@@ -1,8 +1,0 @@
-prefix=/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/install
-
-Name: waypoint_updater
-Description: Description of waypoint_updater
-Version: 0.0.0
-Cflags: 
-Libs: -L/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/install/lib 
-Requires: 

@@ -1,8 +1,0 @@
-prefix=/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/devel
-
-Name: waypoint_loader
-Description: Description of waypoint_loader
-Version: 0.0.0
-Cflags: 
-Libs: -L/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/devel/lib 
-Requires: 

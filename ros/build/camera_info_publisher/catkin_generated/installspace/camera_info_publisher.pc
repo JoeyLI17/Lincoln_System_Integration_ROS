@@ -1,8 +1,0 @@
-prefix=/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/install
-
-Name: camera_info_publisher
-Description: Description of camera_info_publisher
-Version: 0.0.0
-Cflags: 
-Libs: -L/media/joey/JOEY_SF/udacity/final/System_Integration_ROS/ros/install/lib 
-Requires: 
