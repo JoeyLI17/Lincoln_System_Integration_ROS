@@ -58,11 +58,9 @@ class DBWNode(object):
                                             ThrottleCmd, queue_size=1)
         self.brake_pub = rospy.Publisher('/vehicle/brake_cmd',
                                          BrakeCmd, queue_size=1)
-        self.reset_all()
 
         # TODO: Create `Controller` object
         # self.controller = Controller(<Arguments you wish to provide>)
-
 
         self.controller = Controller (vehicle_mass   = vehicle_mass,
                                       fuel_capacity  = fuel_capacity,
@@ -81,14 +79,16 @@ class DBWNode(object):
         rospy.loginfo(self.twist_cb)
         rospy.Subscriber('/current_velocity', TwistStamped, self.velocity_cb)
 
-        self.throttle        = None
-        self.brake           = None
-        self.steering        = None
+        # initialized all parameters
+        self.throttle        = 0
+        self.brake           = 0
+        self.steering        = 0
+        
+        self.current_vel     = None
+        self.curr_ang_vel    = None
+        self.dbw_enabled     = None
         self.linear_vel      = None
         self.angular_vel     = None
-        self.current_vel     = None
-        self.curr_ang_vel = None
-        self.dbw_enabled     = None
 
         self.loop()
 
