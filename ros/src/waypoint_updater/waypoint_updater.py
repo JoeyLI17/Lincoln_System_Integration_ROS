@@ -73,17 +73,21 @@ class WaypointUpdater(object):
         prev_vect = np.array(prev_coord)  # previous point
         pos_vect = np.array([x,y])
 
-        val = np.dot(cl_vect-prev_vect,pos_vect-cl_vect) # velocity
+        val = np.dot(cl_vect - prev_vect, pos_vect - cl_vect) # velocity
 
         if val>0: # in this case the way point is behind us
-            closest_idx = (closest_idx+1)%len(self.waypoints_2d)
+            closest_idx = (closest_idx + 1) % len(self.waypoints_2d)
         return closest_idx
 
     def publish_waypoints(self,closest_idx):
         lane = Lane()
         lane.header = self.base_waypoints.header
-        lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx+LOOKAHEAD_WPS]
-        rospy.logdebug("Publish lane: ", lane)
+
+        if self.base_waypoints.waypoints == None:
+            rospy.logerr("error: self.base_waypoints.waypoints== none!")
+
+        lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx + LOOKAHEAD_WPS]
+        # rospy.logdebug("Publish lane: ", lane)
         self.final_waypoints_pub.publish(lane)
         
         # rospy.spin()
