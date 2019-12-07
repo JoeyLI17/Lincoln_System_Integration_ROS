@@ -78,6 +78,10 @@ catkin_make
 roscore
 rosbag play -l traffic_light_bag_file/traffic_light_training.bag
 rviz (In rviz window load rviz config file)
+
+Extract the pics from bag
+/rosrun bag_tools extract_images OUT_DIR FILETYPE STEREO_BASE_TOPIC BAGFILE/ example:
+ rosrun bag_tools extract_images ../pic  jpg      /image_color      ../traffic_light_training.bag 
 ```
 4. Launch your project in site mode
 ```bash
