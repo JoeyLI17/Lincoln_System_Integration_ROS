@@ -63,7 +63,9 @@ roslaunch launch/styx.launch
 ```bash
 unzip traffic_light_bag_file.zip
 ```
-```Optional bag tool
+```
+Optional bag tool installation steps:
+
 cd catkin_ws/src
 mkdir srv_tools
 cd srv_tools
