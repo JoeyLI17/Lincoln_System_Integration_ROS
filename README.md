@@ -63,6 +63,16 @@ roslaunch launch/styx.launch
 ```bash
 unzip traffic_light_bag_file.zip
 ```
+```Optional bag tool
+cd catkin_ws/src
+mkdir srv_tools
+cd srv_tools
+git clone https://github.com/srv/srv_tools.git .
+cd ../..
+rosdep install --from-paths src --ignore-src --rosdistro kinetic # install dependencies
+catkin_make
+```
+
 3. Play the bag file
 ```bash
 roscore
