@@ -79,7 +79,8 @@ class TLClassifier(object):
             #rospy.logerr("Couldn't locate lights")
             return TrafficLight.UNKNOWN
         i = 0
-        class_image = cv2.resize(img[box[0]:box[2], box[1]:box[3]], (32, 32))
+        class_image = cv2.resize(img[box[0]:box[2], box[1]:box[3]], (32, 32)) # only look at the traffic light
+        
 	img_hsv=cv2.cvtColor(class_image, cv2.COLOR_RGB2HSV)
 
 	lower_red = np.array([0,50,50])
@@ -108,3 +109,5 @@ class TLClassifier(object):
         else:
             rospy.logerr('GREEN')
             return TrafficLight.GREEN
+            
+            
