@@ -10,11 +10,21 @@ from light_classification.tl_classifier import TLClassifier
 import tf
 import cv2
 import yaml
+from scipy import spatial
 
-STATE_COUNT_THRESHOLD = 3
+STATE_COUNT_THRESHOLD = 2 # original 3
 
 class TLDetector(object):
     def __init__(self):
+
+        '''
+        /vehicle/traffic_lights provides you with the location of the traffic light in 3D map space and
+        helps you acquire an accurate ground truth data source for the traffic light
+        classifier by sending the current color state of all traffic lights in the
+        simulator. When testing on the vehicle, the color state will not be available. You'll need to
+        rely on the position of the light and the camera image to predict it.
+        '''
+
         rospy.init_node('tl_detector')
 
         self.pose = None
@@ -33,7 +43,7 @@ class TLDetector(object):
         rely on the position of the light and the camera image to predict it.
         '''
         sub3 = rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_cb)
-        sub6 = rospy.Subscriber('/image_color', Image, self.image_cb)
+        sub6 = rospy.Subscriber('/image_color', Image, self.image_cb) # image_color is camara data
 
         config_string = rospy.get_param("/traffic_light_config")
         self.config = yaml.load(config_string)
