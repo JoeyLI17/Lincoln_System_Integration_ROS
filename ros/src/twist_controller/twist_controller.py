@@ -11,6 +11,7 @@ class Controller(object):
     def __init__(self, vehicle_mass, fuel_capacity, brake_deadband, decel_limit, accel_limit,
                 wheel_radius, wheel_base, steer_ratio, max_lat_accel, max_steer_angle):
         
+        # YawControl
         self.yaw_controller = YawController(wheel_base, steer_ratio, 0.1, max_lat_accel, max_steer_angle)
         kp = 0.3
         kd = 0.
@@ -18,11 +19,11 @@ class Controller(object):
         min_gas = 0.
         max_gas = 0.2
         self.throttle_controller = PID(kp, ki, kd, min_gas, max_gas)
-        
-        tau = 0.5
-        ts = 0.02
+
+        tau = 0.5 # 1/(2pi*tau) = cutoff frequency
+        ts = 0.02 # Sample time
         self.vel_lpf = LowPassFilter(tau, ts)
-        
+
         self.decel_limit    = decel_limit
         self.accel_limit    = accel_limit
         self.wheel_radius   = wheel_radius
@@ -30,8 +31,8 @@ class Controller(object):
         self.fuel_capacity  = fuel_capacity
         self.brake_deadband = brake_deadband
         
-        
         self.last_time      = rospy.get_time()
+
 
     def control(self, current_vel, dbw_enabled, linear_vel, angular_vel):
         
@@ -53,7 +54,8 @@ class Controller(object):
 
         if linear_vel == 0. and current_vel < 0.1:
             throttle = 0
-            brake = 700 # N*m to hold car in place if we are stopped at light. Acc - 1m/s^2
+            brake = 800 # N*m to hold car in place if we are stopped at light. Acc - 1m/s^2
+                        # Normal brake force
 
         elif throttle < .1 and vel_error < 0:
             throttle = 0
