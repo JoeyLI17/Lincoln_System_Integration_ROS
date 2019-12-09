@@ -16,12 +16,14 @@ color = None
 cmap = ImageColor.colormap
 # print("Number of colors =", len(cmap))
 COLOR_LIST = sorted([c for c in cmap.keys()])
+counter = 0;
 
 class TLClassifier(object):
     def __init__(self):
         
         
         self.dg = tf.Graph()
+        self.count = 0
 
         pwd = os.path.dirname(os.path.realpath(__file__))
         with self.dg.as_default():
@@ -38,9 +40,9 @@ class TLClassifier(object):
             self.detection_classes = self.dg.get_tensor_by_name('detection_classes:0')
             self.num_detections = self.dg.get_tensor_by_name('num_detections:0')  
 
-    def export_result(self,img):
+    def export_result(self,img,s):
         # export image
-        f_name = "detected_{}.jpg".format(calendar.timegm(gmtime()))
+        f_name = "detected_{}_{}.jpg".format(self.count,s)
         dir = './detected'
 
         if not os.path.exists(dir):
@@ -116,8 +118,36 @@ class TLClassifier(object):
         class_image = cv2.resize(img[box[0]:box[2], box[1]:box[3]], (32, 32)) # only look at the traffic light
         # print len(class_image)
         # export image
-        # self.export_result(class_image)
         
+        '''
+        gray = cv2.cvtColor(class_image, cv2.COLOR_RGB2GRAY)
+        top_gray = gray[2:12,7:25]
+        bot_gray = gray[20:29,7:25]
+        self.export_result(gray,0)
+        self.count= self.count+1
+        
+        sum_top = sum(top_gray)
+        self.export_result(top_gray,sum(sum_top))
+        self.count= self.count+1
+        
+        sum_bot = sum(bot_gray)
+        self.export_result(bot_gray,sum(sum_bot))
+        self.count= self.count+1
+        
+        
+        
+        
+        rospy.logerr(sum(sum_top))
+        rospy.logwarn(sum(sum_bot))
+        
+        if sum(sum_top) > sum(sum_bot):
+            rospy.logerr('RED')
+            return TrafficLight.RED
+        else:
+            rospy.logerr('GREEN')
+            return TrafficLight.GREEN
+        
+        '''
 	img_hsv=cv2.cvtColor(class_image, cv2.COLOR_RGB2HSV)
 
 	lower_red = np.array([0,50,50])
@@ -140,12 +170,12 @@ class TLClassifier(object):
 	red_count = cv2.countNonZero(output_img[:, :, 0])    
 	green_count = cv2.countNonZero(output_img2[:, :, 1])    
         #print('red_count', red_count, 'green_count', green_count)
+        
         if red_count > green_count:
             rospy.logerr('RED')
             return TrafficLight.RED
         else:
             rospy.logerr('GREEN')
             return TrafficLight.GREEN
-            
             
 
