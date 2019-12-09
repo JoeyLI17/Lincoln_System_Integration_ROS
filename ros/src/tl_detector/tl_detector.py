@@ -228,7 +228,8 @@ class TLDetector(object):
                         diff = d
                         closest_light = light
                         state = light.state
-                        self.__create_training_data(state)
+                        
+                        # self.__create_training_data(state)
                         
                         line_wp_idx = temp_wp_idx
             

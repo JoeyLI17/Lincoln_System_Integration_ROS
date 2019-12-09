@@ -47,17 +47,6 @@ class TLClassifier(object):
             os.makedirs(dir)
         cv2.imwrite('{}/{}'.format(dir, f_name), img)
 
-    def draw_boxes(self, image, box, classes, thickness=3):
-        """Draw bounding boxes on the image"""
-        # draw = ImageDraw.Draw(image)
-        
-        for i in range(len(box)):
-           bot, left, top, right = boxes[i, ...]
-           class_id = int(classes[i])
-           color = COLOR_LIST[class_id]
-           draw = cv2.line(image, (left, top), (left, bot), (right, bot), (right, top), (left, top), thickness)
-        return draw
-
     def get_box(self, image):
         with self.dg.as_default():
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -86,10 +75,10 @@ class TLClassifier(object):
                     box = detection_boxes[idx]
                     # print box
                     box = [int(box[0] * dim[0]), int(box[1] * dim[1]), int(box[2] * dim[0]), int(box[3] * dim[1])]
-                    print "box ", box
+                    # print "box ", box
                     
                     bot, left, top, right = box
-                    print "bot ", bot
+                    # print "bot ", bot
                     box_img = cv2.rectangle(box_img, (left, top), (right, bot), (200,0,255) , 3) # color and width
 
                     box_h, box_w = (box[2] - box[0], box[3] - box[1])
@@ -101,7 +90,7 @@ class TLClassifier(object):
                     ret_scores.append(detection_scores[idx]) # scores
                     ret_classes.append(cl)
 
-            self.export_result(box_img)
+            # self.export_result(box_img)
 
 	            #print(detection_scores[idx])
         return ret[np.argmax(ret_scores)] if ret else ret
@@ -125,7 +114,7 @@ class TLClassifier(object):
             return TrafficLight.UNKNOWN
         i = 0
         class_image = cv2.resize(img[box[0]:box[2], box[1]:box[3]], (32, 32)) # only look at the traffic light
-        print len(class_image)
+        # print len(class_image)
         # export image
         # self.export_result(class_image)
         
@@ -159,6 +148,4 @@ class TLClassifier(object):
             return TrafficLight.GREEN
             
             
-    # m3
 
-    hight,width,depth = img_hsv.shape
