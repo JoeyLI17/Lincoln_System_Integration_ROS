@@ -1,9 +1,21 @@
 from styx_msgs.msg import TrafficLight
 import tensorflow as tf
 import cv2
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageColor
 import numpy as np
 import os
 import rospy
+import calendar
+from time import gmtime, strftime
+
+color = None
+
+# Colors (one for each class)
+cmap = ImageColor.colormap
+# print("Number of colors =", len(cmap))
+COLOR_LIST = sorted([c for c in cmap.keys()])
 
 class TLClassifier(object):
     def __init__(self):
@@ -26,12 +38,30 @@ class TLClassifier(object):
             self.detection_classes = self.dg.get_tensor_by_name('detection_classes:0')
             self.num_detections = self.dg.get_tensor_by_name('num_detections:0')  
 
+    def export_result(self,img):
+        # export image
+        f_name = "detected_{}.jpg".format(calendar.timegm(gmtime()))
+        dir = './detected'
+
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        cv2.imwrite('{}/{}'.format(dir, f_name), img)
+
+    def draw_boxes(self, image, box, classes, thickness=3):
+        """Draw bounding boxes on the image"""
+        # draw = ImageDraw.Draw(image)
+        
+        for i in range(len(box)):
+           bot, left, top, right = boxes[i, ...]
+           class_id = int(classes[i])
+           color = COLOR_LIST[class_id]
+           draw = cv2.line(image, (left, top), (left, bot), (right, bot), (right, top), (left, top), thickness)
+        return draw
+
     def get_box(self, image):
         with self.dg.as_default():
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
             tf_image_input = np.expand_dims(image, axis=0)
-
             (detection_boxes, detection_scores, detection_classes, num_detections) = self.session.run(
                 [self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections],
                 feed_dict={self.image_tensor: tf_image_input})
@@ -42,7 +72,10 @@ class TLClassifier(object):
 
             ret = []
             ret_scores = []
+            ret_classes = []
             detection_threshold = 0.2
+
+            box_img = image # a copy of image
 
             # Traffic signals are labelled 10 in COCO
             for idx, cl in enumerate(detection_classes.tolist()):
@@ -51,13 +84,26 @@ class TLClassifier(object):
                         continue
                     dim = image.shape[0:2]
                     box = detection_boxes[idx]
+                    # print box
                     box = [int(box[0] * dim[0]), int(box[1] * dim[1]), int(box[2] * dim[0]), int(box[3] * dim[1])]
+                    print "box ", box
+                    
+                    bot, left, top, right = box
+                    print "bot ", bot
+                    box_img = cv2.rectangle(box_img, (left, top), (right, bot), (2,0,255) , 3) # color and width
+
                     box_h, box_w = (box[2] - box[0], box[3] - box[1])
                     if box_h / box_w < 1.6:
                         continue
                     #print('detected bounding box: {} conf: {}'.format(box, detection_scores[idx]))
-                    ret.append(box)
-                    ret_scores.append(detection_scores[idx])
+
+                    ret.append(box) # boxes
+                    ret_scores.append(detection_scores[idx]) # scores
+                    ret_classes.append(cl)
+            # draw box and export for checking
+            # box_img = self.draw_boxes(image,ret,ret_classes)
+            self.export_result(box_img)
+
 	            #print(detection_scores[idx])
         return ret[np.argmax(ret_scores)] if ret else ret
 
@@ -80,6 +126,9 @@ class TLClassifier(object):
             return TrafficLight.UNKNOWN
         i = 0
         class_image = cv2.resize(img[box[0]:box[2], box[1]:box[3]], (32, 32)) # only look at the traffic light
+        print len(class_image)
+        # export image
+        # self.export_result(class_image)
         
 	img_hsv=cv2.cvtColor(class_image, cv2.COLOR_RGB2HSV)
 
