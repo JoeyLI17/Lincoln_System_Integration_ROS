@@ -90,7 +90,7 @@ class TLClassifier(object):
                     
                     bot, left, top, right = box
                     print "bot ", bot
-                    box_img = cv2.rectangle(box_img, (left, top), (right, bot), (2,0,255) , 3) # color and width
+                    box_img = cv2.rectangle(box_img, (left, top), (right, bot), (200,0,255) , 3) # color and width
 
                     box_h, box_w = (box[2] - box[0], box[3] - box[1])
                     if box_h / box_w < 1.6:
