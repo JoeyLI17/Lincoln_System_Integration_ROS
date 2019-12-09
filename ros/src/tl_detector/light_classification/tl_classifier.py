@@ -100,8 +100,7 @@ class TLClassifier(object):
                     ret.append(box) # boxes
                     ret_scores.append(detection_scores[idx]) # scores
                     ret_classes.append(cl)
-            # draw box and export for checking
-            # box_img = self.draw_boxes(image,ret,ret_classes)
+
             self.export_result(box_img)
 
 	            #print(detection_scores[idx])
@@ -160,3 +159,6 @@ class TLClassifier(object):
             return TrafficLight.GREEN
             
             
+    # m3
+
+    hight,width,depth = img_hsv.shape

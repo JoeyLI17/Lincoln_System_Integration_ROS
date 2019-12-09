@@ -205,7 +205,8 @@ class TLDetector(object):
         
         # List of positions that correspond to the line to stop in front of for a given intersection
         stop_line_positions = self.config['stop_line_positions']
-        
+        site_sim = self.config['is_site']
+
         if(self.pose):
             x = self.pose.pose.position.x
             y = self.pose.pose.position.y
@@ -231,6 +232,9 @@ class TLDetector(object):
                         
                         line_wp_idx = temp_wp_idx
             
+        elif(site_sim == 1): # run site test bag
+            state = self.get_light_state(None)
+
         if closest_light != None:
             #rospy.logerr("closest light:")
             state = self.get_light_state(closest_light)
