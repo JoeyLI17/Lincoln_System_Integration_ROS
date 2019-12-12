@@ -40,9 +40,13 @@ class TLClassifier(object):
             self.detection_classes = self.dg.get_tensor_by_name('detection_classes:0')
             self.num_detections = self.dg.get_tensor_by_name('num_detections:0')  
 
-    def export_result(self,img,s):
+    def export_result(self,img,s=-1):
         # export image
-        f_name = "detected_{}_{}.jpg".format(self.count,s)
+        if (s == -1):
+            f_name = "detected_{}.jpg".format(calendar.timegm(gmtime()))
+        else:
+            f_name = "detected_{}_{}.jpg".format(self.count,s)
+            
         dir = './detected'
 
         if not os.path.exists(dir):
@@ -81,7 +85,7 @@ class TLClassifier(object):
                     
                     bot, left, top, right = box
                     # print "bot ", bot
-                    box_img = cv2.rectangle(box_img, (left, top), (right, bot), (200,0,255) , 3) # color and width
+                    # box_img = cv2.rectangle(box_img, (left, top), (right, bot), (200,0,255) , 3) # color and width
 
                     box_h, box_w = (box[2] - box[0], box[3] - box[1])
                     if box_h / box_w < 1.6:
@@ -92,7 +96,7 @@ class TLClassifier(object):
                     ret_scores.append(detection_scores[idx]) # scores
                     ret_classes.append(cl)
 
-            # self.export_result(box_img)
+            self.export_result(box_img)
 
 	            #print(detection_scores[idx])
         return ret[np.argmax(ret_scores)] if ret else ret
@@ -170,6 +174,7 @@ class TLClassifier(object):
         
         if red_count > green_count:
             rospy.logerr('RED')
+            self.export_result(img_hsv)
             return TrafficLight.RED
         else:
             rospy.logerr('GREEN')
