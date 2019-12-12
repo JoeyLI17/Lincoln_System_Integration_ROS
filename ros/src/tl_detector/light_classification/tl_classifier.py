@@ -148,27 +148,24 @@ class TLClassifier(object):
             return TrafficLight.GREEN
         
         '''
-	img_hsv=cv2.cvtColor(class_image, cv2.COLOR_RGB2HSV)
-
-	lower_red = np.array([0,50,50])
-	upper_red = np.array([10,255,255])
-	mask0 = cv2.inRange(img_hsv, lower_red, upper_red)
-
-	lower_red = np.array([160,50,50])
-	upper_red = np.array([180,255,255])
-	mask1 = cv2.inRange(img_hsv, lower_red, upper_red)
-	
-	mask = mask0+mask1
-
-	output_img = class_image.copy()
-	output_img[np.where(mask==0)] = 0
-	
-	mask2 = cv2.inRange(img_hsv, (36, 25, 25), (70, 255,255))
-	output_img2 = class_image.copy()
-	output_img2[np.where(mask2==0)] = 0
-	
-	red_count = cv2.countNonZero(output_img[:, :, 0])    
-	green_count = cv2.countNonZero(output_img2[:, :, 1])    
+        img_hsv=cv2.cvtColor(class_image, cv2.COLOR_RGB2HSV)
+        lower_red = np.array([0,50,50])
+        upper_red = np.array([10,255,255])
+        mask0 = cv2.inRange(img_hsv, lower_red, upper_red)
+        lower_red = np.array([160,50,50])
+        upper_red = np.array([180,255,255])
+        mask1 = cv2.inRange(img_hsv, lower_red, upper_red)
+        
+        mask = mask0+mask1
+        
+        output_img = class_image.copy()
+        output_img[np.where(mask==0)] = 0
+        mask2 = cv2.inRange(img_hsv, (36, 25, 25), (70, 255,255))
+        output_img2 = class_image.copy()
+        output_img2[np.where(mask2==0)] = 0
+        red_count = cv2.countNonZero(output_img[:, :, 0])
+        green_count = cv2.countNonZero(output_img2[:, :, 1]) 
+           
         #print('red_count', red_count, 'green_count', green_count)
         
         if red_count > green_count:
