@@ -96,7 +96,7 @@ class TLClassifier(object):
                     ret_scores.append(detection_scores[idx]) # scores
                     ret_classes.append(cl)
 
-            self.export_result(box_img)
+            # self.export_result(box_img)
 
 	            #print(detection_scores[idx])
         return ret[np.argmax(ret_scores)] if ret else ret
@@ -174,7 +174,7 @@ class TLClassifier(object):
         
         if red_count > green_count:
             rospy.logerr('RED')
-            self.export_result(img_hsv)
+            # self.export_result(img_hsv)
             return TrafficLight.RED
         else:
             rospy.logerr('GREEN')
