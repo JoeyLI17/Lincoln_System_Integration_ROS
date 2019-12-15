@@ -219,6 +219,7 @@ class TLDetector(object):
                     line = stop_line_positions[i]
                     x = line[0]
                     y = line[1]
+                    rospy.logwarn("stop_line_position: %f %f",x,y)
 
                     temp_wp_idx = self.get_closest_waypoint(x,y)   
 
@@ -232,9 +233,11 @@ class TLDetector(object):
                         # self.__create_training_data(state)
                         
                         line_wp_idx = temp_wp_idx
+                        rospy.loginfo("line_wp_idx: %i",line_wp_idx)
             
-        elif(site_sim == 1): # run site test bag
-            state = self.get_light_state(None)
+        # elif(site_sim == 1): # run site test bag
+        #    state = self.get_light_state(None)
+        #    return 2, state
 
         if closest_light != None:
             #rospy.logerr("closest light:")
